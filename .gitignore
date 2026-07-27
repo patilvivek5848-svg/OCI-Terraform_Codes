@@ -1,0 +1,17 @@
+# Terraform
+**/.terraform/
+**/.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+**/*.tfstate
+**/*.tfstate.*
+
+# Provider
+provider.tf
+**/provider.tf
+
+# Keys
+*.pem
+*.key
+**/*.pem
+**/*.key
