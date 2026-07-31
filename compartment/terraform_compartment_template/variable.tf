@@ -2,7 +2,7 @@ variable "parent_compartment_ocid" {
   type        = string
   description = "The OCID of the parent compartment where the new compartment will be created."
 }
-variable "compartment_nam{
+variable "compartment_name" {
   type        = string
   description = "The name assigned to the compartment."
 }
