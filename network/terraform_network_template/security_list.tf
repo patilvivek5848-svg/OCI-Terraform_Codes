@@ -1,64 +1,50 @@
 resource "oci_core_security_list" "amazon_security_list" {
 
   compartment_id = var.compartment_ocid
-
-  vcn_id = oci_core_vcn.generated_oci_core_vcn.id
-
-  display_name = var.security_list_name
-
-  defined_tags = var.defined_tags
+  vcn_id         = oci_core_vcn.generated_oci_core_vcn.id
+  display_name   = var.security_list_name
+  defined_tags   = var.defined_tags
 
   # ----------------------------------------------------------
-  # Ingress Rule - SSH from Hub VCN
+  # Dynamic Ingress Rules
   # ----------------------------------------------------------
 
-  ingress_security_rules {
+  dynamic "ingress_security_rules" {
 
-    protocol = "6"
+    for_each = var.ingress_rules
 
-    source = var.ssh_source_1
+    content {
 
-    source_type = "CIDR_BLOCK"
+      protocol    = ingress_security_rules.value.protocol
+      source       = ingress_security_rules.value.source
+      source_type  = ingress_security_rules.value.source_type
 
-    tcp_options {
+      tcp_options {
 
-      min = 22
-    
-      max = 22
+        min = ingress_security_rules.value.min_port
+        max = ingress_security_rules.value.max_port
+
+      }
 
     }
 
   }
 
   # ----------------------------------------------------------
-  # Ingress Rule - Allow Internal VCN Communication
+  # Dynamic Egress Rules
   # ----------------------------------------------------------
 
-  ingress_security_rules {
+  dynamic "egress_security_rules" {
 
-    protocol = "6"
+    for_each = var.egress_rules
 
-  source = var.ssh_source_2
+    content {
 
-  source_type = "CIDR_BLOCK"
+      protocol         = egress_security_rules.value.protocol
+      destination      = egress_security_rules.value.destination
+      destination_type = egress_security_rules.value.destination_type
 
-  tcp_options {
-    min = 22
-    max = 22
-  }
-
-}
-  # ----------------------------------------------------------
-  # Egress Rule - Allow All Outbound Traffic
-  # ----------------------------------------------------------
-
-  egress_security_rules {
-
-    protocol = "all"
-
-    destination = "0.0.0.0/0"
-
-    destination_type = "CIDR_BLOCK"
+    }
 
   }
 

@@ -41,14 +41,34 @@ variable "security_list_name" {
   type        = string
 }
 
-variable "ssh_source_1" {
-  description = "SSH Source CIDR"
-  type        = string
+variable "ingress_rules" {
+
+  description = "List of ingress security rules"
+
+  type = list(object({
+
+    protocol    = string
+    source       = string
+    source_type  = string
+    min_port     = number
+    max_port     = number
+
+  }))
+
 }
 
-variable "ssh_source_2" {
-  description = "SSH Source CIDR"
-  type        = string
+variable "egress_rules" {
+
+  description = "List of egress security rules"
+
+  type = list(object({
+
+    protocol         = string
+    destination      = string
+    destination_type = string
+
+  }))
+
 }
 
 # ==========================================================
